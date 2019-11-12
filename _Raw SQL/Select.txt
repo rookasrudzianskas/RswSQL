@@ -1,0 +1,107 @@
+SELECT char_class AS 'Veikejo klase', name AS 'Vardas' FROM game_character;
+
+SELECT * FROM game_character LIMIT 100;
+
+SELECT * FROM game_character WHERE age > 19;
+
+SELECT * FROM game_character WHERE age >= 50;
+
+SELECT * FROM game_character WHERE level <> 66;
+
+INSERT INTO game_character VALUES(NULL,1, 19, 'Mr White', 5);
+
+SELECT * FROM game_character WHERE age = 19 XOR level>=42;
+
+SELECT * FROM game_character WHERE age>=19 AND age<=50;
+
+SELECT * FROM game_character WHERE age BETWEEN 19 AND 50;
+
+--zodis prasideda m
+SELECT * FROM game_character WHERE name LIKE 'm%';
+
+
+--zodis prasideda m ir susideda is 2 raidziu
+INSERT INTO game_character VALUES(NULL,1, 19, 'Mu', 5);
+SELECT * FROM game_character WHERE name LIKE 'm_';
+
+--zodis pasibaige raide r
+SELECT * FROM game_character WHERE name LIKE '%r';
+
+--prasideda m baigiasi r
+SELECT * FROM game_character WHERE name LIKE 'm%r';
+
+--raide per viduri
+SELECT * FROM game_character WHERE name LIKE '%r%';
+
+--regex pirma raide
+SELECT * FROM game_character WHERE name REGEXP '^r';
+
+
+--Duomenu rikiavimas
+--didejimo tvarka
+SELECT * FROM game_character ORDER BY age ASC;
+--mazejimo tvarka
+SELECT * FROM game_character ORDER BY age DESC;
+
+--grupavimas
+SELECT * FROM game_character GROUP BY name ASC;
+
+--gaunam unikalias reiksmes
+SELECT DISTINCT(name) FROM game_character;
+
+--MAX, MIN, COUNT, SUM, AVG
+SELECT AVG(age) as 'Amziaus vidurkis' FROM game_character;
+
+SELECT SUM(level) FROM game_character;
+
+SELECT MIN(age) FROM game_character;
+
+SELECT MAX(name) FROM game_character;
+
+
+-- floor ceiling
+SELECT AVG(age) FROM game_character;
+SELECT FLOOR(AVG(age)) FROM game_character;
+SELECT CEILING(AVG(age)) FROM game_character;
+
+--ROUND
+SELECT ROUND(AVG(age),2) FROM game_character;
+
+
+CREATE TABLE orders
+(
+	ID SERIAL,
+	userID BIGINT UNSIGNED NOT NULL,
+	gameID BIGINT UNSIGNED NOT NULL,
+	orderdate TIMESTAMP
+);
+
+INSERT INTO orders VALUES
+(NULL, 1, 5, NULL),
+(NULL, 2, 4, NULL),
+(NULL, 3, 3, NULL),
+(NULL, 4, 2, NULL),
+(NULL, 5, 1, NULL);
+
+
+--get data from few tables
+SELECT users.name, orders.orderdate FROM users, orders WHERE orders.userID = users.ID;
+
+SELECT u.name, o.orderdate FROM users u, orders o WHERE o.userID = u.ID;
+
+-- IN
+SELECT * FROM users WHERE ID IN(SELECT userID FROM orders);
+
+--JOIN
+--inner
+SELECT u.name, o.orderdate FROM users u INNER JOIN orders o ON u.ID = o.userID;
+
+--left 
+SELECT u.name, o.orderdate FROM users u LEFT JOIN orders o ON u.ID = o.userID;
+
+--right 
+SELECT u.name, o.orderdate FROM users u RIGHT JOIN orders o ON u.ID = o.userID;
+
+
+
+

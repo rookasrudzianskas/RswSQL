@@ -1,0 +1,55 @@
+CREATE DATABASE game;
+USE game;
+
+CREATE TABLE game_info
+(
+	ID BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	game_type ENUM('Adventure','Platformer', 'Casual', 'Medieval', 'Horror'),
+	 name VARCHAR(20),
+	 reliese_date TIME,
+	 description VARCHAR(225),
+	 game_size DOUBLE
+);
+
+CREATE TABLE users
+(
+	ID SERIAL,
+	name VARCHAR(20),
+	paswd VARCHAR(18),
+	email VARCHAR(20) UNIQUE,
+	reg_date TIMESTAMP
+);
+
+CREATE TABLE game_character
+(
+	ID SERIAL,
+	char_class ENUM('fighter','Mage', 'Thief'),
+	age TINYINT,
+	name VARCHAR(20),
+	level INT(100)
+);
+
+
+
+INSERT INTO game_info VALUES(1, 'Casual', 'Undertale', '12:14:14', 'Flowy the flower', 124.85)
+
+SELECT * FROM game_info;
+
+
+INSERT INTO game_info VALUES(NULL,'Adventure','Litle Nightmares','04:02:03','Escape',14.05),
+(NULL,'Adventure','Litle Nightmares','04:02:03','Escape',14.05),
+(NULL,'Adventure','Litle Nightmares','04:02:03','Escape',14.05);
+
+INSERT INTO game_info(ID,name,game_size)VALUES(NULL,'Into the woods',458.2),
+(NULL, 'Hello Neighbour',145.75),
+(ID,name,game_size)VALUES(NULL,'Into the woods',458.2),
+(ID,name,game_size)VALUES(NULL,'Into the woods',458.2);
+
+
+DELETE FROM game_info WHERE game_type = 'Adventure';
+
+
+
+
+
+

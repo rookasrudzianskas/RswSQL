@@ -1,0 +1,221 @@
+CREATE DATABASE Bank;
+USE Bank;
+
+CREATE TABLE Users
+(
+	ID SERIAL,
+	Name VARCHAR(50),
+	Code VARCHAR(11)
+);
+
+INSERT INTO Users VALUES
+(NULL, 'James','Bond'),
+(NULL, 'Bond','James'),
+(NULL, 'Jayn','Air'),
+(NULL, 'Homer','Simpson');
+
+
+CREATE TABLE Sas
+(
+	ID SERIAL,
+	User_ID BIGINT UNSIGNED,
+	Balance DOUBLE NOT NULL DEFAULT 66.6,
+	FOREIGN KEY(User_ID) REFERENCES Users(ID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO Sas VALUES
+(NULL, 1,587),
+(NULL, 2,8965),
+(NULL, 3,544545),
+(NULL, 4,4533);
+
+CREATE TABLE Card
+(
+	ID SERIAL,
+	Card_type ENUM('Debit','Credit'),
+	User_ID BIGINT UNSIGNED,
+	Sas_ID BIGINT UNSIGNED,
+	FOREIGN KEY(User_ID) REFERENCES Users(ID) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY(Sas_ID) REFERENCES Sas(ID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO Card VALUES
+(NULL, 1, 1, 4),
+(NULL, 2, 2, 3),
+(NULL, 1, 3, 2),
+(NULL, 2, 4, 1);
+
+
+
+--STORED PROCEDURES
+DELIMITER $$
+CREATE PROCEDURE ShowAll()
+BEGIN
+	SELECT * FROM Users;
+END$$
+
+CALL ShowAll$$
+
+--IN --OUT --INOUT
+
+Find(VARCAR user_name)
+{
+	IF(inf.name == user_name)
+	{
+		select();
+	}
+}
+
+CREATE PROCEDURE Find(IN user_name VARCHAR(50))
+BEGIN
+	SELECT * FROM Users WHERE Name = user_name;
+END$$
+
+CALL Find('Bond')$$
+
+DROP PROCEDURE Find$$
+
+CREATE PROCEDURE GetAccounts(IN low DOUBLE, IN high DOUBLE)
+BEGIN
+	SELECT * FROM sas WHERE balance BETWEEN low AND high;
+END$$
+
+CALL GetAccounts(200,600)$$
+
+
+DROP PROCEDURE FindByName$$
+
+CREATE PROCEDURE FindByName(IN uname VARCHAR(50))
+BEGIN
+	SELECT * FROM Users WHERE name LIKE CONCAT('%',uname,'%');
+END$$
+
+CALL FindByName('s')$$
+
+
+CREATE PROCEDURE CountAll(OUT rez BIGINT)
+BEGIN
+	SELECT COUNT(ID) INTO rez FROM Users;
+END$$
+
+CALL CountAll(@rez)$$
+
+SELECT @rez$$
+
+
+CREATE PROCEDURE CountAllByBalance(INOUT balanceCount BIGINT)
+BEGIN
+	SELECT COUNT(ID) INTO balanceCount FROM sas WHERE balance=balanceCount;
+END$$
+
+SET @rez=8965$$
+CALL CountAllByBalance(@rez)$$
+SELECT @rez$$
+
+
+ALTER TABLE Users ADD COLUMN Age TINYINT DEFAULT 17$$
+
+INSERT INTO Users VALUES
+(NULL, 'James','Bond',85),
+(NULL, 'Bond','James',40),
+(NULL, 'Jayn','Air',21),
+(NULL, 'Homer','Simpson',56),
+(NULL, 'James','Bond',90),
+(NULL, 'Bond','James',4),
+(NULL, 'Jayn','Air',5),
+(NULL, 'Homer','Simpson',25)$$
+
+
+CREATE TABLE demographics
+(
+	ID SERIAL,
+	Name VARCHAR(50),
+	Label ENUM('Old','Young')
+)$$
+
+CREATE PROCEDURE OldOrYoung(IN age_limit TINYINT)
+BEGIN
+	DECLARE n VARCHAR(50); --name
+	DECLARE a TINYINT; --age_limit
+	DECLARE fin BOOLEAN DEFAULT FALSE;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin=TRUE; --when end is reached sets fin to true
+	
+	OPEN myCursor; --get data
+	WHILE fin<>TRUE DO
+		BEGIN
+			--get data from row
+			FETCH myCursor INTO n,a;
+			IF a<age_limit THEN
+				INSERT INTO demographics VALUES(NULL,n,2);
+			ELSE
+				INSERT INTO demographics VALUES(NULL,n,1);
+			END IF
+		END;
+	END WHILE;
+	CLOSE myCursor;
+	SELECT * FROM demographics;
+END$$
+
+
+
+
+
+
+
+CREATE PROCEDURE OldOrYoung(IN age_limit TINYINT)
+BEGIN
+	DECLARE n VARCHAR(50); 
+	DECLARE a TINYINT; 
+	DECLARE fin BOOLEAN DEFAULT FALSE;
+	DECLARE myCursor CURSOR FOR SELECT name,age FROM Users;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin=TRUE; 
+	
+	OPEN myCursor; 
+	WHILE fin<>TRUE DO
+		BEGIN
+			FETCH myCursor INTO n,a;
+			IF a<age_limit THEN
+				INSERT INTO demographics VALUES(NULL,n,2);
+			ELSE
+				INSERT INTO demographics VALUES(NULL,n,1);
+			END IF;
+		END;
+	END WHILE;
+	CLOSE myCursor;
+	
+	SELECT * FROM demographics;
+END$$
+
+
+
+CREATE PROCEDURE OldOrYoung(IN age_limit TINYINT)
+BEGIN
+	DECLARE n VARCHAR(50); 
+	DECLARE a TINYINT; 
+	DECLARE fin BOOLEAN DEFAULT FALSE;
+	DECLARE myCursor CURSOR FOR SELECT name,age FROM Users;
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET fin=TRUE; 
+	
+	OPEN myCursor; 
+	REPEAT
+			FETCH myCursor INTO n,a;
+			IF a<age_limit THEN
+				INSERT INTO demographics VALUES(NULL,n,2);
+			ELSE
+				INSERT INTO demographics VALUES(NULL,n,1);
+			END IF;
+	UNTIL Done
+	CLOSE myCursor;
+	
+	SELECT * FROM demographics;
+END$$
+
+
+
+
+
+CALL OldOrYoung(18)$$
+

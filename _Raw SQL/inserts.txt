@@ -1,0 +1,5 @@
+INSERT INTO `users` VALUES (1,'Oleg Surajev','321OlegasDievas','oleg@gmail.com','2018-10-04 14:38:25'),(2,'Rusas4','nuKaTu','rusas4@gmail.com','2018-10-04 14:38:25'),(3,'Oparopa','stfu666','devil@gmail.com','2018-10-04 14:38:25'),(4,'spiderMen','verysecure','peter.p@gmail.com','2018-10-04 14:38:25'),(5,'Ciurka','98741236','pop55@gmail.com','2018-10-04 14:38:25');
+
+INSERT INTO `game_info` VALUES (1,'Casual','Undertale','12:14:14','Flowy the flower',124.85),(4,NULL,'Into the woods',NULL,NULL,458.2),(5,NULL,'Hello neighbour',NULL,NULL,145.75),(6,'Horror','Amnesia','06:00:01','Escape to survive',1440.05),(7,'Casual','PUBG','13:55:23','Last man stading wins',1512.05);
+
+INSERT INTO `game_character` VALUES (1,'fighter',19,'N00b Destroyer',42),(2,'Mage',52,'The Ancient One',99),(3,'Mage',76,'Devil',87),(4,'fighter',32,'Rocky',66),(5,'Thief',47,'MrBlack',12);

@@ -1,0 +1,93 @@
+CREATE DATABASE School;
+USE School;
+
+CREATE TABLE Students
+(
+	ID SERIAL,
+	Name VARCHAR(50),
+	LastName VARCHAR(50)
+);
+
+CREATE TABLE Stud_Info
+(
+	ID SERIAL,
+	Stud_ID BIGINT UNSIGNED,
+	Address VARCHAR(50),
+	Phone VARCHAR(10),
+	FOREIGN KEY(Stud_ID) REFERENCES Students(ID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Stud_Score
+(
+	ID SERIAL,
+	Stud_ID BIGINT UNSIGNED,
+	Score TINYINT,
+	FOREIGN KEY(Stud_ID) REFERENCES Students(ID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO Students VALUES
+(NULL, 'Johanes', 'Eckerstrom'),
+(NULL, 'Luke', 'Skywalker'),
+(NULL, 'Teletubie', 'Poe'),
+(NULL, 'Edgar Alan', 'Poe'),
+(NULL, 'Mario', 'Jumpman');
+
+INSERT INTO Stud_Info VALUES
+(NULL, 1, 'Rock Avenue SW','666-66-666'),
+(NULL, 1, 'Its no moon st','deathstar'),
+(NULL, 1, 'Teletubie Hill','98657412'),
+(NULL, 1, 'Dark Light House','78569'),
+(NULL, 1, 'Sewer','133-524');
+
+INSERT INTO Stud_Score VALUES
+(NULL,1,10),
+(NULL,2,8),
+(NULL,3,5),
+(NULL,4,7),
+(NULL,5,9),
+(NULL,1,8),
+(NULL,2,9),
+(NULL,3,8),
+(NULL,4,3),
+(NULL,5,10);
+
+
+
+SELECT st.Name, st.LastName,inf.Address, inf.Phone, AVG(sc.Score) FROM Students st, Stud_Info inf, Stud_Score sc WHERE st.ID=inf.Stud_ID AND st.ID =sc.Stud_ID ;
+
+
+----alter table
+RENAME TABLE Stud_Info TO Mokiniu_info; 
+
+RENAME DATABASE School TO hell;
+
+--add col
+ALTER TABLE students ADD COLUMN Age TINYINT NOT NULL  DEFAULT 15;
+
+ALTER TABLE Students ADD COLUMN MidleName VARCHAR(50) DEFAULT 'John' AFTER Name;
+
+ALTER TABLE Students ADD COLUMN Stud_Number VARCHAR(20) FIRST;
+
+ALTER TABLE Students DROP COLUMN Stud_Number;
+ALTER TABLE Students DROP Stud_Number;
+ 
+ALTER TABLE Students MODIFY MidleName VARCHAR(20);
+
+ALTER TABLE STUDENTS MODIFY Age BIGINT UNSIGNED;
+
+ALTER TABLE Students CHANGE Age Stud_Age INT;
+
+
+ALTER TABLE stud_score DROP FOREIGN KEY `stud_score_ibfk_1`;
+
+ALTER TABLE stud_score ADD CONSTRAINT `fk_Stud_ID` FOREIGN KEY(Stud_ID) REFERENCES Students(ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE INDEX studLastNameIndex ON Students(LastName);
+
+CREATE INDEX studNameSurnameIndex ON Students(Name, LastName);
+
+ALTER TABLE Students DROP INDEX studNameSurnameIndex;
+
+
+
+
